@@ -19,7 +19,12 @@ class UserInfoServices: NSObject {
     
     func fetchUser(userId: String, completion: @escaping (_ userInfo: UserModel?, _ error: Error?) -> Void) {
         db.collection("users").document(userId).getDocument { (snapshot, error) in
-            completion(nil, error)
+            guard let data = snapshot?.data() else { return }
+            if let error = error {
+                completion(nil, error)
+            } else {
+                completion(UserModel(uid: snapshot!.documentID, username: data["username"] as! String, email: data["email"] as! String, password: data["password"] as! String), nil)
+            }
         }
     }
 }

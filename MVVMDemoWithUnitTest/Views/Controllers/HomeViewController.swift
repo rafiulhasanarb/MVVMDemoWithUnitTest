@@ -20,8 +20,17 @@ class HomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(didTapLogout))
         self.navigationItem.leftBarButtonItem?.isHidden = true
-                
-        self.userNamelbl.text = "Hello \(UserDefaults.standard.string(forKey: "email")!)"
+        
+        DispatchQueue.main.async {
+            if let data = UserDefaults.standard.data(forKey: "userInfo") {
+                do {
+                    let userInfo = try JSONDecoder().decode(UserModel.self, from: data)
+                    self.userNamelbl.text = "Hello \(userInfo.username)"
+                } catch {
+                    print("Unable to Decode Note (\(error))")
+                }
+            }
+        }
     }
     
     // MARK: - Selectors
