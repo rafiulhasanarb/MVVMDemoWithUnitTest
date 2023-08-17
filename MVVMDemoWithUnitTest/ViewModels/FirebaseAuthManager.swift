@@ -20,15 +20,16 @@ class FirebaseAuthManager: NSObject {
                 let userInfo = UserModel(uid: user.uid, username: username, email: email, password: password)
                 self.userInfoVM.createUser(user: userInfo) { userInfo, error in
                     if error != nil {
+                        do {
+                            let data = try JSONEncoder().encode(userInfo)
+                            UserDefaults.standard.set(data, forKey: "userInfo")
+                        } catch {
+                            print("Unable to Encode Note (\(error))")
+                        }
                         completionBlock(true)
                     }
-                    do {
-                        let data = try JSONEncoder().encode(userInfo)
-                        UserDefaults.standard.set(data, forKey: "userInfo")
-                    } catch {
-                        print("Unable to Encode Note (\(error))")
-                    }
                 }
+                completionBlock(true)
             } else {
                 completionBlock(false)
             }

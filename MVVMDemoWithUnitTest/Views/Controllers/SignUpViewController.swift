@@ -56,19 +56,17 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func signUpButtonPressed(_ sender: Any) {
-        
         if let email = emailTextField.text, let password = passwordTextField.text, let username = nameTextField.text {
             signUpManager.createUser(username: username, email: email, password: password) {[weak self] (success) in
-                
-                guard let `self` = self else { return }
+                guard let self = self else { return }
                 var message: String = ""
                 if (success) {
                     message = "User was sucessfully created."
                     self.successLogin()
                 } else {
-                    message = "There was an error."
+                    message = "Go To Login Page"
                 }
-                let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+                let alertController = UIAlertController(title: "Success", message: message, preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
                 self.display(alertController: alertController)
             }
@@ -76,8 +74,7 @@ class SignUpViewController: UIViewController {
     }
     
     private func successLogin() {
-        let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
-        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.popToRootViewController(animated: true)
         self.clearData()
     }
     
